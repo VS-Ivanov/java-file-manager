@@ -15,7 +15,7 @@ public class FileSystemReceiver {
     public FileSystemReceiver() {
 
         //запоминаем рабочую директорию приложения
-        this.cwd = new File("");
+        this.cwd = new File(System.getProperty("user.dir"));
     }
 
     public void pwd(){
@@ -193,15 +193,15 @@ public class FileSystemReceiver {
             return;
         }
 
-        if(!target.exists()) {
-            System.out.println(String.format("Destination %s not found!",target.getAbsolutePath()));
-            return;
-        }
-
-        if(!target.isDirectory()){
-            System.out.println(String.format("Destination %s must be directory!",target.getAbsolutePath()));
-            return;
-        }
+//        if(!target.exists()) {
+//            System.out.println(String.format("Destination %s not found!",target.getAbsolutePath()));
+//            return;
+//        }
+//
+//        if(!target.isDirectory()){
+//            System.out.println(String.format("Destination %s must be directory!",target.getAbsolutePath()));
+//            return;
+//        }
 
         File copy = new File(target.getAbsoluteFile()+File.separator+source.getName());
         if(copy.exists()){
@@ -217,11 +217,13 @@ public class FileSystemReceiver {
                 return;
             };
             Arrays.stream(source.listFiles()).forEach(file->copy(file,copy));
+            System.out.println(String.format("%s - copied",source.getAbsolutePath()));
             return;
         }
 
         //если соурс - файл, копируем файл
         copyFile(source,copy);
+        System.out.println(String.format("%s - copied",source.getAbsolutePath()));
     }
 
     private void copyFile(File source, File target){

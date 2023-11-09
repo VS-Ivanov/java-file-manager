@@ -1,28 +1,26 @@
 package ru.otus.vadim.ivanov.java.file;
 
-import java.util.Arrays;
-
-public class CdCommand implements Command{
+public class MvCommand implements Command{
 
     private FileSystemReceiver fileReceiver;
-    public CdCommand(FileSystemReceiver fileReceiver) {
+
+    public MvCommand(FileSystemReceiver fileReceiver) {
         this.fileReceiver = fileReceiver;
     }
 
     @Override
     public void execute(String[] args) {
-        // команда cd требует обязательный аргумент
-        if(args.length != 1){
+        // команда mv требует два обязательных аргумента
+        if(args.length != 2){
             System.out.println(String.format("Invalid arguments! Use:\n%s",getUsage()));
             return;
         }
 
-        fileReceiver.cd(args[0]);
+        fileReceiver.mv(args[0],args[1]);
     }
 
     @Override
     public String getUsage() {
-
-        return "cd [path] - change current working directory to path";
+        return "mv [source] [destination] - move/rename file or directory source to destination";
     }
 }

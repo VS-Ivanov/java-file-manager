@@ -1,6 +1,6 @@
 package ru.otus.vadim.ivanov.java.file;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class CommandInvoker {
 
@@ -13,8 +13,24 @@ public class CommandInvoker {
     public void execute(String commandName, String[] args) {
         Command command = commandMap.get(commandName);
         if(command == null) {
-            throw new IllegalStateException("no command registered for " + commandName);
+            //throw new IllegalStateException("no command registered for " + commandName);
+            System.out.println(String.format("Command %s not found! Use > help for view all available commands.",commandName));
+            return;
         }
         command.execute(args);
+    }
+
+    //возвращаем список доступных команд
+    public Set<String> getCommands() {
+        return commandMap.keySet();
+    }
+
+    //возвращаем usage по команде
+    public String getCommandUsage(String commandName){
+        Command command = commandMap.get(commandName);
+        if(command != null) {
+            return command.getUsage();
+        }
+        return null;
     }
 }

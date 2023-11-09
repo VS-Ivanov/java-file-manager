@@ -10,11 +10,16 @@ public class PwdCommand implements Command{
 
     @Override
     public void execute(String[] args) {
+        //команда pwd не поддерживает аргументы
+        if(args.length > 0){
+            System.out.println(String.format("Command not support arguments! Use:\n %s",getUsage()));
+            return;
+        }
         fileReceiver.pwd();
     }
 
     @Override
     public String getUsage() {
-        return null;
+        return " pwd - print current work directory";
     }
 }

@@ -1,28 +1,25 @@
 package ru.otus.vadim.ivanov.java.file;
 
-import java.util.Arrays;
-
-public class CdCommand implements Command{
-
+public class CpCommand implements Command{
     private FileSystemReceiver fileReceiver;
-    public CdCommand(FileSystemReceiver fileReceiver) {
+
+    public CpCommand(FileSystemReceiver fileReceiver) {
         this.fileReceiver = fileReceiver;
     }
 
     @Override
     public void execute(String[] args) {
-        // команда cd требует обязательный аргумент
-        if(args.length != 1){
+        // команда cp требует два обязательных аргумента
+        if(args.length != 2){
             System.out.println(String.format("Invalid arguments! Use:\n%s",getUsage()));
             return;
         }
 
-        fileReceiver.cd(args[0]);
+        fileReceiver.cp(args[0],args[1]);
     }
 
     @Override
     public String getUsage() {
-
-        return "cd [path] - change current working directory to path";
+        return "cp [source] [destination] - copy file or directory source to destination";
     }
 }
