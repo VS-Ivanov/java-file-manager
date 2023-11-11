@@ -3,10 +3,7 @@ package ru.otus.vadim.ivanov.java.file;
 import java.io.*;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class FileSystemReceiver {
 
@@ -55,6 +52,19 @@ public class FileSystemReceiver {
     }
 
     public void cd(String dirName){
+
+        //попытка перехода в текущий каталог
+        if(Objects.equals(dirName,".")){
+            return;
+        }
+
+        //попытка перехода в родительский каталог
+        if(Objects.equals(dirName,"...")){
+            cwd = cwd.getParentFile();
+            return;
+        }
+
+        //иначе ходим куда-то в другое место
         File targetDir = getAbsoluteFile(dirName);
         if(!targetDir.exists()) {
             System.out.println(String.format("Directory %s not found!",dirName));
@@ -119,13 +129,9 @@ public class FileSystemReceiver {
             return;
         }
 
-        if(target.isDirectory()){
-            System.out.println(String.format("%s is a directory!",filename));
-            return;
-        }
-
         System.out.println(String.format("Name: %s",target.getName()));
         System.out.println(String.format("Path: %s",target.getAbsolutePath()));
+        System.out.println(String.format("Type: %s",target.isDirectory()?"Directory":"File"));
         System.out.println(String.format("IsHidden: %s",target.isHidden()));
         System.out.println(String.format("CanRead: %s",target.canRead()));
         System.out.println(String.format("CanWrite: %s",target.canWrite()));
@@ -144,11 +150,22 @@ public class FileSystemReceiver {
             return;
         }
 
-        if(target.exists()){
-            System.out.println(String.format("%s already exists!",targetFilename));
+        //если наш таргет является директорий которая существует, то просто переносим туда
+        if(target.exists() && target.isDirectory()){
+            File mvTarget = new File(target.getAbsoluteFile()+File.separator+source.getName());
+            if(!source.renameTo(mvTarget)){
+                System.out.println(String.format("Cannot move %s to %s!",sourceFilename,targetFilename));
+            }
             return;
         }
 
+        //если таргет уже существует, но это не директория
+        if(target.exists() && !target.isDirectory()){
+            System.out.println(String.format("File %s already exists!", target.getAbsolutePath()));
+            return;
+        }
+
+        //если таргета не существует, пробуем переименовать
         if(!source.renameTo(target)){
             System.out.println(String.format("Cannot move %s to %s!",sourceFilename,targetFilename));
         }
@@ -193,16 +210,6 @@ public class FileSystemReceiver {
             return;
         }
 
-//        if(!target.exists()) {
-//            System.out.println(String.format("Destination %s not found!",target.getAbsolutePath()));
-//            return;
-//        }
-//
-//        if(!target.isDirectory()){
-//            System.out.println(String.format("Destination %s must be directory!",target.getAbsolutePath()));
-//            return;
-//        }
-
         File copy = new File(target.getAbsoluteFile()+File.separator+source.getName());
         if(copy.exists()){
             System.out.println(String.format("%s already exists!",copy.getAbsolutePath()));
@@ -242,9 +249,9 @@ public class FileSystemReceiver {
 
     private File getAbsoluteFile(String path){
 
-        if(path == ".") {return cwd;}
-        // родители могут вызываться рекурсивно :(
-        if(path == ".."){return cwd.getParentFile();}
+//        if(path == ".") {return cwd;}
+//        // родители могут вызываться рекурсивно :(
+//        if(path == ".."){return cwd.getParentFile();}
 
         File file = new File(path);
         if(file.isAbsolute()){
