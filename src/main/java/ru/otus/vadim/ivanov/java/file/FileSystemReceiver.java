@@ -59,7 +59,7 @@ public class FileSystemReceiver {
         }
 
         //попытка перехода в родительский каталог
-        if(Objects.equals(dirName,"...")){
+        if(Objects.equals(dirName,"..")){
             cwd = cwd.getParentFile();
             return;
         }
